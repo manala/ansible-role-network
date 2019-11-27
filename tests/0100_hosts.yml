@@ -1,0 +1,22 @@
+---
+
+- name: "{{ test }}"
+  hosts: debian
+  become: true
+  vars:
+    manala_network_hosts_file: /tmp/hosts
+    manala_network_hosts:
+      - 1.1.1.111: foo.com
+      - 1.1.1.2: baz.com
+      - 1.1.1.333: qux.com
+  pre_tasks:
+    - copy:
+        dest: /tmp/hosts
+        content: |
+          1.1.1.111 bar.com
+          1.1.1.222 bar.com
+  roles:
+    - manala.network
+  post_tasks:
+    - name: Goss
+      command: goss --gossfile {{ test }}.goss.yml validate
